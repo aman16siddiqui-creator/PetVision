@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PetVision — AI Dog & Cat Breed Classifier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              300: '#a5b4fc',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.96; transform: scale(0.995); }
+    }
+    .animate-pulse-subtle {
+      animation: pulse-subtle 2s infinite ease-in-out;
+    }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- ================= 1. NAVBAR ================= -->
+  <header class="sticky top-0 z-50 glass-nav border-b border-slate-200/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="#home" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-md shadow-brand-500/25 group-hover:bg-brand-700 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xl font-bold tracking-tight text-slate-900 group-hover:text-brand-600 transition">PetVision</span>
+          <span class="text-[10px] uppercase font-semibold tracking-wider text-brand-600 -mt-1">AI Breed Classifier</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+        <a href="#home" class="hover:text-brand-600 transition">Home</a>
+        <a href="#how-it-works" class="hover:text-brand-600 transition">How it works</a>
+        <a href="#about" class="hover:text-brand-600 transition">About</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          AI Ready
+        </span>
+        <a href="#upload-card" class="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 rounded-xl shadow-sm hover:shadow-md transition">
+          Try Now
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+    <!-- ================= 2. HERO SECTION ================= -->
+    <section id="home" class="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
+      <!-- Decorative background glow -->
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-brand-200/40 via-indigo-100/30 to-purple-200/40 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-semibold uppercase tracking-wider mb-6">
+          <svg class="w-4 h-4 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.98 2.98 0 0113 13a2.99 2.99 0 01-.88 2.12z" clip-rule="evenodd"></path>
+          </svg>
+          130+ Breeds Supported
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight md:leading-tight">
+          Classify any dog or cat breed <br class="hidden sm:inline">
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-500">in seconds</span>
+        </h1>
+
+        <p class="mt-5 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          Upload a photo of your pet to classify its breed in seconds, check confidence levels, and see what the AI focused on.
+        </p>
+
+        <!-- ================= 3. UPLOAD CARD ================= -->
+        <div id="upload-card" class="mt-10 max-w-2xl mx-auto text-left">
+          <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/70 border border-slate-200/80 p-6 sm:p-8 transition-all">
+            
+            <!-- Error Alert -->
+            <div id="error-alert" class="hidden mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-sm flex items-start gap-3">
+              <svg class="w-5 h-5 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div class="flex-1">
+                <span class="font-semibold" id="error-title">Upload Error:</span>
+                <span id="error-message" class="block mt-0.5 text-rose-600">Please provide a valid image file.</span>
+              </div>
+              <button type="button" onclick="dismissError()" class="text-rose-400 hover:text-rose-600 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
+
+            <!-- Upload Area -->
+            <div id="drop-zone" class="relative group border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-2xl p-8 sm:p-10 text-center transition-all bg-slate-50/50 hover:bg-brand-50/30 cursor-pointer">
+              <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+              
+              <div id="upload-placeholder" class="flex flex-col items-center">
+                <div class="w-16 h-16 rounded-2xl bg-brand-100/80 text-brand-600 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200 shadow-sm">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 class="text-base font-semibold text-slate-800">
+                  <span class="text-brand-600 hover:underline">Click to browse</span> or drag and drop
+                </h3>
+                <p class="text-xs text-slate-500 mt-1">High quality JPG, PNG, or WebP photo of your dog or cat</p>
+                <div class="inline-flex items-center gap-2 mt-4 text-[11px] font-medium text-slate-400 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-2xs">
+                  <span>Max file size: 5 MB</span>
+                  <span>•</span>
+                  <span>JPG, PNG, or WebP</span>
+                </div>
+              </div>
+
+              <!-- Preview State (Hidden by default) -->
+              <div id="preview-container" class="hidden flex flex-col items-center">
+                <div class="relative group/preview w-full max-w-xs aspect-square rounded-xl overflow-hidden border border-slate-200 shadow-md bg-black/5">
+                  <img id="image-preview" src="" alt="Selected pet" class="w-full h-full object-cover">
+                  <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-medium">
+                    Click to change photo
+                  </div>
+                </div>
+                <div class="mt-3 flex items-center gap-2 text-xs text-slate-600">
+                  <span id="preview-filename" class="font-medium truncate max-w-[200px]">filename.jpg</span>
+                  <span class="text-slate-400">•</span>
+                  <span id="preview-filesize" class="text-slate-500">1.2 MB</span>
+                  <button type="button" id="remove-btn" class="ml-2 text-rose-500 hover:text-rose-700 font-medium z-20">Remove</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons & Status -->
+            <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="text-xs text-slate-500 flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-brand-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <span>See what the AI focused on in your photo</span>
+              </div>
+
+              <button id="analyze-btn" type="button" disabled class="w-full sm:w-auto px-7 py-3 rounded-xl font-semibold text-sm text-white bg-slate-300 cursor-not-allowed shadow-sm transition-all flex items-center justify-center gap-2">
+                <span>Classify Breed</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Loading Spinner State -->
+            <div id="loading-spinner" class="hidden mt-6 pt-6 border-t border-slate-100 flex flex-col items-center text-center">
+              <div class="relative w-12 h-12 mb-3">
+                <div class="absolute inset-0 rounded-full border-4 border-brand-100"></div>
+                <div class="absolute inset-0 rounded-full border-4 border-brand-600 border-t-transparent animate-spin"></div>
+              </div>
+              <p class="text-sm font-semibold text-slate-800">Processing Pet Image...</p>
+              <p id="loading-subtext" class="text-xs text-slate-500 mt-1">Analyzing pet features and generating your results...</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= 4. RESULTS SECTION ================= -->
+    <section id="results-section" class="hidden py-16 bg-white border-y border-slate-200/80 transition-all duration-500">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Section Header -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-5 mb-8">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Classification Complete</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Prediction Results</h2>
+          </div>
+          <button type="button" onclick="resetToUpload()" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+            Classify Another Pet
+          </button>
+        </div>
+
+        <!-- Low Confidence Banner (<40%) -->
+        <div id="low-confidence-alert" class="hidden mb-8 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 flex items-start gap-3.5 shadow-sm">
+          <div class="p-2 rounded-xl bg-amber-100 text-amber-600 shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-amber-900">Low Confidence Match (<span id="low-conf-percent">0%</span>)</h4>
+            <p class="text-xs text-amber-700 mt-0.5 leading-relaxed">
+              We are not quite sure about this photo. For best results, ensure your pet is clearly visible, well-lit, and facing the camera with minimal background clutter.
+            </p>
+          </div>
+        </div>
+
+        <!-- Main Results Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Left Column: Top Breed Card & Top 3 Breakdown -->
+          <div class="lg:col-span-5 space-y-6">
+            
+            <!-- Hero Top Breed Card -->
+            <div class="bg-gradient-to-br from-brand-50/70 via-indigo-50/40 to-slate-50 border border-brand-200/80 rounded-2xl p-6 shadow-sm relative overflow-hidden">
+              <div class="flex items-center justify-between mb-4">
+                <span id="animal-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-brand-600 text-white shadow-sm">
+                  <span id="animal-icon">🐶</span>
+                  <span id="animal-name">Dog</span>
+                </span>
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Top Match</span>
+              </div>
+
+              <div class="mt-2">
+                <h3 id="top-breed-name" class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                  Golden Retriever
+                </h3>
+                <div class="mt-3 flex items-baseline gap-2">
+                  <span id="top-breed-confidence" class="text-4xl font-black text-brand-600 tracking-tight">95.4%</span>
+                  <span class="text-xs font-medium text-slate-500">model confidence</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Top 3 Predictions Breakdown -->
+            <div class="bg-slate-50/80 border border-slate-200 rounded-2xl p-6">
+              <h4 class="text-sm font-bold uppercase tracking-wider text-slate-700 mb-4 flex items-center gap-2">
+                <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Top-3 Candidates
+              </h4>
+
+              <div id="top3-list" class="space-y-4">
+                <!-- Dynamically populated via JS -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Column: Visual Highlights (Expanded Width) -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="bg-slate-900 text-white rounded-2xl p-6 sm:p-7 shadow-xl border border-slate-800">
+              
+              <!-- Tab Header & View Switcher -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+                <div class="flex items-center gap-2">
+                  <div class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
+                  <h4 class="text-sm font-bold tracking-wide">See what the AI focused on</h4>
+                </div>
+
+                <!-- View Toggle Buttons -->
+                <div class="inline-flex p-1 rounded-xl bg-slate-800 border border-slate-700 text-xs font-medium">
+                  <button type="button" id="tab-overlay" onclick="switchVisualView('overlay')" class="px-3 py-1 rounded-lg bg-brand-600 text-white shadow-xs transition">
+                    Overlay
+                  </button>
+                  <button type="button" id="tab-split" onclick="switchVisualView('split')" class="px-3 py-1 rounded-lg text-slate-300 hover:text-white transition">
+                    Side-by-Side
+                  </button>
+                  <button type="button" id="tab-original" onclick="switchVisualView('original')" class="px-3 py-1 rounded-lg text-slate-300 hover:text-white transition">
+                    Original
+                  </button>
+                </div>
+              </div>
+
+              <!-- Visual View Container -->
+              <div class="mt-5">
+                
+                <!-- View 1: Overlay View -->
+                <div id="view-overlay" class="relative aspect-square sm:aspect-[4/3] rounded-xl overflow-hidden bg-black/40 border border-slate-800 flex items-center justify-center">
+                  <img id="gradcam-overlay-img" src="" alt="AI Focus Overlay" class="w-full h-full object-cover">
+                  <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1 rounded-md text-[11px] font-medium text-slate-200">
+                    AI Focus Overlay
+                  </div>
+                </div>
+
+                <!-- View 2: Split View (Side by Side) -->
+                <div id="view-split" class="hidden grid grid-cols-2 gap-3">
+                  <div class="relative aspect-square rounded-xl overflow-hidden bg-black/40 border border-slate-800">
+                    <img id="split-original-img" src="" alt="Original Photo" class="w-full h-full object-cover">
+                    <div class="absolute bottom-2 left-2 bg-black/70 backdrop-blur-md px-2 py-0.5 rounded text-[10px] text-slate-200">
+                      Original
+                    </div>
+                  </div>
+                  <div class="relative aspect-square rounded-xl overflow-hidden bg-black/40 border border-slate-800">
+                    <img id="split-gradcam-img" src="" alt="AI Focus Highlight" class="w-full h-full object-cover">
+                    <div class="absolute bottom-2 left-2 bg-black/70 backdrop-blur-md px-2 py-0.5 rounded text-[10px] text-amber-300">
+                      AI Focus
+                    </div>
+                  </div>
+                </div>
+
+                <!-- View 3: Original View -->
+                <div id="view-original" class="hidden relative aspect-square sm:aspect-[4/3] rounded-xl overflow-hidden bg-black/40 border border-slate-800 flex items-center justify-center">
+                  <img id="pure-original-img" src="" alt="Original Pet Photo" class="w-full h-full object-cover">
+                  <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1 rounded-md text-[11px] font-medium text-slate-200">
+                    Uploaded Pet Photo
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Heatmap Caption -->
+              <div class="mt-4 p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs text-slate-300 flex items-center gap-2.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0 inline-block"></span>
+                <p class="text-slate-300">Highlighted areas influenced the result most.</p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= 5. HOW IT WORKS ================= -->
+    <section id="how-it-works" class="py-20 bg-slate-50 border-b border-slate-200/80">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Simple Process</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 mt-2">How It Works</h2>
+          <p class="mt-3 text-slate-600 text-sm sm:text-base">
+            Three simple steps to classify your pet's breed.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Step 1 -->
+          <div class="bg-white rounded-2xl p-7 border border-slate-200/80 shadow-xs hover:shadow-md transition text-center sm:text-left">
+            <div class="w-12 h-12 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-xl mb-5 shadow-2xs">
+              📷
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-1.5">Upload a photo</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Choose a clear picture of a dog or cat.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="bg-white rounded-2xl p-7 border border-slate-200/80 shadow-xs hover:shadow-md transition text-center sm:text-left">
+            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xl mb-5 shadow-2xs">
+              ✨
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-1.5">Get instant results</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              See the breed and how confident we are.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="bg-white rounded-2xl p-7 border border-slate-200/80 shadow-xs hover:shadow-md transition text-center sm:text-left">
+            <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xl mb-5 shadow-2xs">
+              🔍
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-1.5">Learn more</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Find out what the AI focused on in your photo.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= 6. ABOUT SECTION ================= -->
+    <section id="about" class="py-20 bg-white">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <span class="text-xs font-bold uppercase tracking-wider text-brand-600">About PetVision</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Built for Pet Lovers</h2>
+          <p class="mt-4 text-slate-600 text-base leading-relaxed">
+            PetVision helps pet lovers find out the breed of their dog or cat in seconds. Whether you're curious about a rescue pup, meeting a friend's new kitten, or simply testing your pet knowledge, our smart visual classifier makes discovering breeds simple and fun.
+          </p>
+        </div>
+
+        <!-- 3 Feature Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          
+          <!-- Card 1 -->
+          <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200/80 hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-lg mb-4 shadow-2xs">
+              🐾
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-1.5">130+ breeds covered</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              From popular favorites like Golden Retrievers and Siamese cats to rarer purebred companions.
+            </p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200/80 hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg mb-4 shadow-2xs">
+              ⚡
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-1.5">Results in seconds</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Just drop in a photo to immediately view the top breed match and confidence levels.
+            </p>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200/80 hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-lg mb-4 shadow-2xs">
+              🔍
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-1.5">See what the AI sees</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Explore visual highlights showing which distinctive facial features and fur patterns guided the prediction.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Helpful Tip Box -->
+        <div class="max-w-2xl mx-auto p-4 rounded-2xl bg-amber-50 border border-amber-200/90 text-amber-900 flex items-center gap-3.5 shadow-2xs">
+          <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 font-bold text-sm">
+            💡
+          </div>
+          <p class="text-xs sm:text-sm text-amber-800 font-medium">
+            <strong class="font-semibold text-amber-900">Helpful tip:</strong> For best results, use a clear, well-lit photo with one animal.
+          </p>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= 7. FOOTER ================= -->
+  <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold text-sm">
+          PV
+        </div>
+        <div>
+          <span class="font-bold text-white tracking-tight">PetVision</span>
+          <span class="block text-xs text-slate-500">AI Dog & Cat Breed Classification</span>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-6 text-xs text-slate-400">
+        <a href="#home" class="hover:text-white transition">Home</a>
+        <a href="#how-it-works" class="hover:text-white transition">How it works</a>
+        <a href="#about" class="hover:text-white transition">About</a>
+      </div>
+
+      <div class="text-xs text-slate-500">
+        Made for dog and cat lovers everywhere
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ================= CLIENT JAVASCRIPT ================= -->
+  <script>
+    // State variables
+    let selectedFile = null;
+    let originalDataUrl = null;
+    let gradcamDataUrl = null;
+
+    // DOM Elements
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const uploadPlaceholder = document.getElementById('upload-placeholder');
+    const previewContainer = document.getElementById('preview-container');
+    const imagePreview = document.getElementById('image-preview');
+    const previewFilename = document.getElementById('preview-filename');
+    const previewFilesize = document.getElementById('preview-filesize');
+    const removeBtn = document.getElementById('remove-btn');
+    const analyzeBtn = document.getElementById('analyze-btn');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const errorAlert = document.getElementById('error-alert');
+    const errorTitle = document.getElementById('error-title');
+    const errorMessage = document.getElementById('error-message');
+
+    // Results DOM Elements
+    const resultsSection = document.getElementById('results-section');
+    const animalBadge = document.getElementById('animal-badge');
+    const animalIcon = document.getElementById('animal-icon');
+    const animalName = document.getElementById('animal-name');
+    const topBreedName = document.getElementById('top-breed-name');
+    const topBreedConfidence = document.getElementById('top-breed-confidence');
+    const top3List = document.getElementById('top3-list');
+    const lowConfidenceAlert = document.getElementById('low-confidence-alert');
+    const lowConfPercent = document.getElementById('low-conf-percent');
+
+    // Visual Views Elements
+    const viewOverlay = document.getElementById('view-overlay');
+    const viewSplit = document.getElementById('view-split');
+    const viewOriginal = document.getElementById('view-original');
+    const gradcamOverlayImg = document.getElementById('gradcam-overlay-img');
+    const splitOriginalImg = document.getElementById('split-original-img');
+    const splitGradcamImg = document.getElementById('split-gradcam-img');
+    const pureOriginalImg = document.getElementById('pure-original-img');
+
+    const tabOverlay = document.getElementById('tab-overlay');
+    const tabSplit = document.getElementById('tab-split');
+    const tabOriginal = document.getElementById('tab-original');
+
+    const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
+    // File selection handler
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        handleFile(e.target.files[0]);
+      }
+    });
+
+    // Drag and drop handlers
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.add('border-brand-500', 'bg-brand-50/50');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove('border-brand-500', 'bg-brand-50/50');
+      }, false);
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    // Remove file handler
+    removeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      clearSelectedFile();
+    });
+
+    function showError(title, msg) {
+      errorTitle.textContent = title;
+      errorMessage.textContent = msg;
+      errorAlert.classList.remove('hidden');
+    }
+
+    function dismissError() {
+      errorAlert.classList.add('hidden');
+    }
+
+    function clearSelectedFile() {
+      selectedFile = null;
+      originalDataUrl = null;
+      fileInput.value = '';
+      previewContainer.classList.add('hidden');
+      uploadPlaceholder.classList.remove('hidden');
+      analyzeBtn.disabled = true;
+      analyzeBtn.classList.add('bg-slate-300', 'cursor-not-allowed');
+      analyzeBtn.classList.remove('bg-brand-600', 'hover:bg-brand-700', 'cursor-pointer', 'shadow-brand-500/25');
+      dismissError();
+    }
+
+    function handleFile(file) {
+      dismissError();
+
+      // Check file size
+      if (file.size > MAX_SIZE_BYTES) {
+        showError('File Too Large', `The selected image is ${(file.size / (1024 * 1024)).toFixed(2)} MB. Please choose an image smaller than 5 MB.`);
+        clearSelectedFile();
+        return;
+      }
+
+      // Check file type
+      const extension = file.name.split('.').pop().toLowerCase();
+      const validExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+      if (!validExtensions.includes(extension)) {
+        showError('Unsupported File Format', `File extension .${extension} is not supported. Please upload a JPG, PNG, or WebP photo.`);
+        clearSelectedFile();
+        return;
+      }
+
+      selectedFile = file;
+
+      // Update Preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        originalDataUrl = e.target.result;
+        imagePreview.src = originalDataUrl;
+        previewFilename.textContent = file.name;
+        previewFilesize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+
+        uploadPlaceholder.classList.add('hidden');
+        previewContainer.classList.remove('hidden');
+
+        // Enable Action button
+        analyzeBtn.disabled = false;
+        analyzeBtn.classList.remove('bg-slate-300', 'cursor-not-allowed');
+        analyzeBtn.classList.add('bg-brand-600', 'hover:bg-brand-700', 'cursor-pointer', 'shadow-brand-500/25');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Trigger classification
+    analyzeBtn.addEventListener('click', async () => {
+      if (!selectedFile) return;
+
+      dismissError();
+      setLoadingState(true);
+
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      try {
+        const response = await fetch('/predict', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.detail || 'Classification failed. Please try again.');
+        }
+
+        renderResults(data);
+      } catch (err) {
+        showError('Classification Failed', err.message);
+      } finally {
+        setLoadingState(false);
+      }
+    });
+
+    function setLoadingState(isLoading) {
+      if (isLoading) {
+        loadingSpinner.classList.remove('hidden');
+        analyzeBtn.disabled = true;
+        analyzeBtn.classList.add('opacity-75', 'cursor-not-allowed');
+        dropZone.classList.add('pointer-events-none', 'opacity-80');
+      } else {
+        loadingSpinner.classList.add('hidden');
+        analyzeBtn.disabled = false;
+        analyzeBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+        dropZone.classList.remove('pointer-events-none', 'opacity-80');
+      }
+    }
+
+    function renderResults(data) {
+      // 1. Animal Badge
+      const animal = data.animal || 'Pet';
+      animalName.textContent = animal;
+      if (animal === 'Dog') {
+        animalIcon.textContent = '🐶';
+        animalBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-600 text-white shadow-sm';
+      } else if (animal === 'Cat') {
+        animalIcon.textContent = '🐱';
+        animalBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-violet-600 text-white shadow-sm';
+      } else {
+        animalIcon.textContent = '🐾';
+        animalBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-700 text-white shadow-sm';
+      }
+
+      // 2. Top Breed & Confidence
+      const topPrediction = data.top3 && data.top3.length > 0 ? data.top3[0] : { breed: 'Unknown', confidence: 0 };
+      topBreedName.textContent = topPrediction.breed;
+      const topPercentage = (topPrediction.confidence * 100).toFixed(1);
+      topBreedConfidence.textContent = `${topPercentage}%`;
+
+      // 3. Low Confidence (<40%) Alert
+      if (topPrediction.confidence < 0.40) {
+        lowConfPercent.textContent = `${topPercentage}%`;
+        lowConfidenceAlert.classList.remove('hidden');
+      } else {
+        lowConfidenceAlert.classList.add('hidden');
+      }
+
+      // 4. Render Top-3 List with animated progress bars
+      top3List.innerHTML = '';
+      data.top3.forEach((item, index) => {
+        const pct = (item.confidence * 100).toFixed(1);
+        const rankColor = index === 0 ? 'bg-brand-600' : index === 1 ? 'bg-indigo-400' : 'bg-slate-400';
+        const rankText = index === 0 ? 'text-brand-600 font-bold' : 'text-slate-600 font-medium';
+
+        const row = document.createElement('div');
+        row.className = 'group';
+        row.innerHTML = `
+          <div class="flex items-center justify-between text-xs mb-1.5">
+            <span class="${rankText} flex items-center gap-2">
+              <span class="w-4 text-slate-400 text-[10px]">#${index + 1}</span>
+              ${item.breed}
+            </span>
+            <span class="font-bold text-slate-700">${pct}%</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+            <div class="${rankColor} h-full rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
+          </div>
+        `;
+        top3List.appendChild(row);
+
+        // Animate width after insertion
+        setTimeout(() => {
+          row.querySelector(`.${rankColor}`).style.width = `${pct}%`;
+        }, 80);
+      });
+
+      // 5. Setup Images
+      gradcamDataUrl = data.gradcam;
+      gradcamOverlayImg.src = gradcamDataUrl;
+      splitGradcamImg.src = gradcamDataUrl;
+      splitOriginalImg.src = originalDataUrl;
+      pureOriginalImg.src = originalDataUrl;
+
+      // Reset to overlay view tab
+      switchVisualView('overlay');
+
+      // Reveal Results Section and smooth scroll
+      resultsSection.classList.remove('hidden');
+      resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function switchVisualView(view) {
+      // Hide all
+      viewOverlay.classList.add('hidden');
+      viewSplit.classList.add('hidden');
+      viewOriginal.classList.add('hidden');
+
+      // Inactive button styles
+      [tabOverlay, tabSplit, tabOriginal].forEach(tab => {
+        tab.className = 'px-3 py-1 rounded-lg text-slate-300 hover:text-white transition';
+      });
+
+      // Active tab styling
+      const activeClass = 'px-3 py-1 rounded-lg bg-brand-600 text-white shadow-xs transition';
+
+      if (view === 'overlay') {
+        viewOverlay.classList.remove('hidden');
+        tabOverlay.className = activeClass;
+      } else if (view === 'split') {
+        viewSplit.classList.remove('hidden');
+        tabSplit.className = activeClass;
+      } else if (view === 'original') {
+        viewOriginal.classList.remove('hidden');
+        tabOriginal.className = activeClass;
+      }
+    }
+
+    function resetToUpload() {
+      resultsSection.classList.add('hidden');
+      clearSelectedFile();
+      document.getElementById('upload-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+</body>
+</html>
