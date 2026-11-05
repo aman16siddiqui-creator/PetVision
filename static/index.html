@@ -7,10 +7,30 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Tailwind CSS via CDN -->
+  
+  <!-- Automatic Chrome / System Dark Mode Detection -->
+  <script>
+    (function() {
+      // Automatically match Chrome's theme
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+      function applyTheme(isDark) {
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+      applyTheme(prefersDark.matches);
+      // Dynamically react whenever Chrome/OS setting changes
+      prefersDark.addEventListener('change', (e) => applyTheme(e.matches));
+    })();
+  </script>
+
+  <!-- Tailwind CSS via CDN with Dark Mode configured to class -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
@@ -18,16 +38,17 @@
           },
           colors: {
             brand: {
-              50: '#eef2ff',
-              100: '#e0e7ff',
-              200: '#c7d2fe',
-              300: '#a5b4fc',
-              400: '#818cf8',
-              500: '#6366f1',
-              600: '#4f46e5',
-              700: '#4338ca',
-              800: '#3730a3',
-              900: '#312e81',
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              300: '#fdba74',
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+              950: '#431407',
             }
           }
         }
@@ -35,6 +56,8 @@
     }
   </script>
   <style>
+    @media (min-width: 1024px) { html { font-size: 18px; } }
+    @media (min-width: 1536px) { html { font-size: 20px; } }
     @keyframes pulse-subtle {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.96; transform: scale(0.995); }
@@ -43,222 +66,254 @@
       animation: pulse-subtle 2s infinite ease-in-out;
     }
     .glass-nav {
-      background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white transition-colors duration-200">
 
   <!-- ================= 1. NAVBAR ================= -->
-  <header class="sticky top-0 z-50 glass-nav border-b border-slate-200/80 transition-all">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="#home" class="flex items-center gap-2.5 group">
-        <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-md shadow-brand-500/25 group-hover:bg-brand-700 transition">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
+  <header class="sticky top-0 z-50 glass-nav bg-white/85 dark:bg-slate-950/85 border-b border-slate-200/80 dark:border-slate-800/80 transition-all">
+    <div class="w-full px-4 sm:px-6 lg:px-12 h-20 flex items-center justify-between">
+      <a href="#home" onclick="if(!resultsSection.classList.contains('hidden')){resetToUpload();}" class="flex items-center gap-2.5 group">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-brand-500/25 group-hover:scale-105 transition">
+          <svg class="w-8 h-8" viewBox="0 0 68 58" xmlns="http://www.w3.org/2000/svg" aria-label="Dog and cat">
+  <!-- cat -->
+  <ellipse cx="22" cy="45" rx="11" ry="10" fill="#fff"/>
+  <path d="M10 24 L9.5 5 L21 14 Z" fill="#fff"/>
+  <path d="M34 24 L34.5 5 L23 14 Z" fill="#fff"/>
+  <circle cx="22" cy="24" r="12.5" fill="#fff"/>
+  <circle cx="17.5" cy="23" r="1.7" fill="#c2410c"/>
+  <circle cx="26.5" cy="23" r="1.7" fill="#c2410c"/>
+  <path d="M20.3 27.5 L23.7 27.5 L22 29.5 Z" fill="#c2410c"/>
+  <!-- dog (outlined so it separates from the cat) -->
+  <g stroke="#ea580c" stroke-width="1.6">
+    <ellipse cx="46" cy="47" rx="12" ry="10" fill="#fff"/>
+    <ellipse cx="34.5" cy="26" rx="4.2" ry="8.5" transform="rotate(14 34.5 26)" fill="#fff"/>
+    <ellipse cx="57.5" cy="26" rx="4.2" ry="8.5" transform="rotate(-14 57.5 26)" fill="#fff"/>
+    <circle cx="46" cy="27" r="11.5" fill="#fff"/>
+  </g>
+  <circle cx="41.8" cy="25.5" r="1.7" fill="#c2410c"/>
+  <circle cx="50.2" cy="25.5" r="1.7" fill="#c2410c"/>
+  <ellipse cx="46" cy="31" rx="2.6" ry="1.9" fill="#c2410c"/>
+</svg>
         </div>
         <div class="flex flex-col">
-          <span class="text-xl font-bold tracking-tight text-slate-900 group-hover:text-brand-600 transition">PetVision</span>
-          <span class="text-[10px] uppercase font-semibold tracking-wider text-brand-600 -mt-1">AI Breed Classifier</span>
+          <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">PetVision</span>
+          <span class="text-[10px] uppercase font-semibold tracking-wider text-brand-600 dark:text-brand-400 -mt-1">AI Breed Classifier</span>
         </div>
       </a>
 
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-        <a href="#home" class="hover:text-brand-600 transition">Home</a>
-        <a href="#how-it-works" class="hover:text-brand-600 transition">How it works</a>
-        <a href="#about" class="hover:text-brand-600 transition">About</a>
+      <nav class="hidden md:flex items-center gap-10 text-base font-semibold text-slate-600 dark:text-slate-300">
+        <a href="#home" onclick="if(!resultsSection.classList.contains('hidden')){resetToUpload();}" class="hover:text-brand-600 dark:hover:text-brand-400 transition">Home</a>
+        <a href="#how-it-works" class="hover:text-brand-600 dark:hover:text-brand-400 transition">How it works</a>
+        <a href="#about" class="hover:text-brand-600 dark:hover:text-brand-400 transition">About</a>
       </nav>
 
       <div class="flex items-center gap-3">
-        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          AI Ready
-        </span>
-        <a href="#upload-card" class="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 rounded-xl shadow-sm hover:shadow-md transition">
-          Try Now
-        </a>
+        <!-- Theme Toggle (Syncs with Chrome, allows manual click) -->
+        <button id="theme-toggle" type="button" aria-label="Toggle dark/light mode" class="p-2 rounded-xl text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition">
+          <svg id="theme-sun" class="w-4 h-4 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg id="theme-moon" class="w-4 h-4 block dark:hidden text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
       </div>
     </div>
   </header>
 
   <main class="flex-grow">
     <!-- ================= 2. HERO SECTION ================= -->
-    <section id="home" class="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
-      <!-- Decorative background glow -->
-      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-brand-200/40 via-indigo-100/30 to-purple-200/40 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+    <section id="home" class="relative pt-14 pb-24 md:pt-20 md:pb-32 overflow-hidden bg-gradient-to-b from-slate-50 via-orange-50/15 to-slate-50 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950">
+      <!-- Decorative ambient glow -->
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1100px] h-[550px] bg-gradient-to-tr from-brand-300/20 via-amber-200/15 to-orange-300/15 dark:from-brand-900/15 dark:via-amber-900/15 dark:to-orange-950/25 rounded-full blur-3xl -z-10 pointer-events-none"></div>
 
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-semibold uppercase tracking-wider mb-6">
-          <svg class="w-4 h-4 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.98 2.98 0 0113 13a2.99 2.99 0 01-.88 2.12z" clip-rule="evenodd"></path>
-          </svg>
-          130+ Breeds Supported
-        </div>
+      <div class="w-full max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="grid lg:grid-cols-2 gap-12 xl:gap-20 items-center">
+        <!-- HEADING -->
+        <div class="text-center lg:text-left max-w-3xl mx-auto lg:mx-0">
+          <!-- Non-AI Friendly Badge -->
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-100/70 dark:bg-orange-950/70 border border-orange-300/60 dark:border-orange-800/60 text-orange-800 dark:text-orange-300 text-sm font-semibold uppercase tracking-wider mb-5">
+            <span>🐾</span>
+            <span>For Dog & Cat Lovers Everywhere</span>
+          </div>
 
-        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight md:leading-tight">
-          Classify any dog or cat breed <br class="hidden sm:inline">
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-500">in seconds</span>
-        </h1>
+          <h1 class="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15]">
+            Classify any dog or cat breed <br class="hidden sm:inline">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-amber-500 to-orange-500 dark:from-brand-400 dark:via-amber-300 dark:to-orange-300">in seconds</span>
+          </h1>
 
-        <p class="mt-5 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-          Upload a photo of your pet to classify its breed in seconds, check confidence levels, and see what the AI focused on.
-        </p>
+          <p class="mt-4 text-lg sm:text-xl md:text-2xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+            Upload a photo of your pet to classify its breed in seconds, check confidence levels, and see what the AI focused on.
+          </p>
 
-        <!-- ================= 3. UPLOAD CARD ================= -->
-        <div id="upload-card" class="mt-10 max-w-2xl mx-auto text-left">
-          <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/70 border border-slate-200/80 p-6 sm:p-8 transition-all">
-            
-            <!-- Error Alert -->
-            <div id="error-alert" class="hidden mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-sm flex items-start gap-3">
-              <svg class="w-5 h-5 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div class="flex-1">
-                <span class="font-semibold" id="error-title">Upload Error:</span>
-                <span id="error-message" class="block mt-0.5 text-rose-600">Please provide a valid image file.</span>
-              </div>
-              <button type="button" onclick="dismissError()" class="text-rose-400 hover:text-rose-600 transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-              </button>
-            </div>
-
-            <!-- Upload Area -->
-            <div id="drop-zone" class="relative group border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-2xl p-8 sm:p-10 text-center transition-all bg-slate-50/50 hover:bg-brand-50/30 cursor-pointer">
-              <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-              
-              <div id="upload-placeholder" class="flex flex-col items-center">
-                <div class="w-16 h-16 rounded-2xl bg-brand-100/80 text-brand-600 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200 shadow-sm">
-                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <h3 class="text-base font-semibold text-slate-800">
-                  <span class="text-brand-600 hover:underline">Click to browse</span> or drag and drop
-                </h3>
-                <p class="text-xs text-slate-500 mt-1">High quality JPG, PNG, or WebP photo of your dog or cat</p>
-                <div class="inline-flex items-center gap-2 mt-4 text-[11px] font-medium text-slate-400 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-2xs">
-                  <span>Max file size: 5 MB</span>
-                  <span>•</span>
-                  <span>JPG, PNG, or WebP</span>
-                </div>
-              </div>
-
-              <!-- Preview State (Hidden by default) -->
-              <div id="preview-container" class="hidden flex flex-col items-center">
-                <div class="relative group/preview w-full max-w-xs aspect-square rounded-xl overflow-hidden border border-slate-200 shadow-md bg-black/5">
-                  <img id="image-preview" src="" alt="Selected pet" class="w-full h-full object-cover">
-                  <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-medium">
-                    Click to change photo
-                  </div>
-                </div>
-                <div class="mt-3 flex items-center gap-2 text-xs text-slate-600">
-                  <span id="preview-filename" class="font-medium truncate max-w-[200px]">filename.jpg</span>
-                  <span class="text-slate-400">•</span>
-                  <span id="preview-filesize" class="text-slate-500">1.2 MB</span>
-                  <button type="button" id="remove-btn" class="ml-2 text-rose-500 hover:text-rose-700 font-medium z-20">Remove</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Action Buttons & Status -->
-            <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div class="text-xs text-slate-500 flex items-center gap-1.5">
-                <svg class="w-4 h-4 text-brand-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-                <span>See what the AI focused on in your photo</span>
-              </div>
-
-              <button id="analyze-btn" type="button" disabled class="w-full sm:w-auto px-7 py-3 rounded-xl font-semibold text-sm text-white bg-slate-300 cursor-not-allowed shadow-sm transition-all flex items-center justify-center gap-2">
-                <span>Classify Breed</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </button>
-            </div>
-
-            <!-- Loading Spinner State -->
-            <div id="loading-spinner" class="hidden mt-6 pt-6 border-t border-slate-100 flex flex-col items-center text-center">
-              <div class="relative w-12 h-12 mb-3">
-                <div class="absolute inset-0 rounded-full border-4 border-brand-100"></div>
-                <div class="absolute inset-0 rounded-full border-4 border-brand-600 border-t-transparent animate-spin"></div>
-              </div>
-              <p class="text-sm font-semibold text-slate-800">Processing Pet Image...</p>
-              <p id="loading-subtext" class="text-xs text-slate-500 mt-1">Analyzing pet features and generating your results...</p>
-            </div>
-
+          <!-- 3 Quick Value Badges -->
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-4 mt-8 text-sm font-medium text-slate-600 dark:text-slate-300">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-2xs">
+              ⚡ <span>Instant Results</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-2xs">
+              🎯 <span>Confidence Scores</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-2xs">
+              🔍 <span>Visual Insights</span>
+            </span>
           </div>
         </div>
+
+        <!-- UPLOAD BOX IS UNDER IT (EXPANDED TO FULL WIDTH ACROSS THE PAGE) -->
+        <div id="upload-card" class="w-full max-w-2xl mx-auto lg:max-w-none bg-white dark:bg-slate-900 rounded-3xl shadow-2xl shadow-slate-200/70 dark:shadow-black/60 border border-slate-200/80 dark:border-slate-800 p-6 sm:p-10 transition-all">
+          
+          <!-- Error Alert -->
+          <div id="error-alert" class="hidden mb-6 p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-sm flex items-start gap-3">
+            <svg class="w-5 h-5 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div class="flex-1">
+              <span class="font-semibold" id="error-title">Upload Error:</span>
+              <span id="error-message" class="block mt-0.5 text-rose-600 dark:text-rose-400">Please provide a valid image file.</span>
+            </div>
+            <button type="button" onclick="dismissError()" class="text-rose-400 hover:text-rose-600 dark:hover:text-rose-300 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+          </div>
+
+          <!-- Wide Upload Dropzone -->
+          <div id="drop-zone" class="relative group border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-400 rounded-2xl py-12 sm:py-16 px-6 text-center transition-all bg-slate-50/70 dark:bg-slate-800/40 hover:bg-brand-50/30 dark:hover:bg-brand-950/20 cursor-pointer">
+            <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+            
+            <div id="upload-placeholder" class="flex flex-col items-center">
+              <div class="w-20 h-20 rounded-3xl bg-brand-100/80 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform duration-200 shadow-sm">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-slate-100">
+                <span class="text-brand-600 dark:text-brand-400 hover:underline">Click to browse</span> or drag and drop your pet photo
+              </h3>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-md">
+                Works with any clear photo of a dog, puppy, cat, or kitten
+              </p>
+              <div class="inline-flex items-center gap-2 mt-5 text-sm font-medium text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-800 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-2xs">
+                <span>Max file size: 5 MB</span>
+                <span>•</span>
+                <span>JPG, PNG, or WebP</span>
+              </div>
+            </div>
+
+            <!-- Preview State (Hidden by default) -->
+            <div id="preview-container" class="hidden flex flex-col items-center">
+              <div class="relative group/preview w-full max-w-sm aspect-square rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-lg bg-black/5 dark:bg-black/20">
+                <img id="image-preview" src="" alt="Selected pet" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center text-white text-sm font-medium">
+                  Click to choose a different photo
+                </div>
+              </div>
+              <div class="mt-4 flex items-center gap-2 text-sm sm:text-sm text-slate-600 dark:text-slate-300">
+                <span id="preview-filename" class="font-medium truncate max-w-[260px]">filename.jpg</span>
+                <span class="text-slate-400">•</span>
+                <span id="preview-filesize" class="text-slate-500 dark:text-slate-400">1.2 MB</span>
+                <button type="button" id="remove-btn" class="ml-2 text-rose-500 hover:text-rose-600 dark:text-rose-400 font-semibold z-20">Remove</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Bar Under Dropzone -->
+          <div class="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-sm sm:text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">
+              <svg class="w-4 h-4 text-brand-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <span>Visual feature highlights generated with each result</span>
+            </div>
+
+            <button id="analyze-btn" type="button" disabled class="w-full sm:w-auto px-9 py-3.5 rounded-2xl font-bold text-sm text-white bg-slate-300 dark:bg-slate-800 dark:text-slate-500 cursor-not-allowed shadow-sm transition-all flex items-center justify-center gap-2">
+              <span>Classify Breed</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Loading Spinner State -->
+          <div id="loading-spinner" class="hidden mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col items-center text-center">
+            <div class="relative w-12 h-12 mb-3">
+              <div class="absolute inset-0 rounded-full border-4 border-brand-100 dark:border-brand-950"></div>
+              <div class="absolute inset-0 rounded-full border-4 border-brand-600 dark:border-brand-400 border-t-transparent animate-spin"></div>
+            </div>
+            <p class="text-base font-semibold text-slate-800 dark:text-slate-100">Processing Pet Image...</p>
+            <p id="loading-subtext" class="text-sm sm:text-sm text-slate-500 dark:text-slate-400 mt-1">Analyzing pet features and generating your results...</p>
+          </div>
+
+        </div>
+
+        </div><!-- /hero grid -->
 
       </div>
     </section>
 
-    <!-- ================= 4. RESULTS SECTION ================= -->
-    <section id="results-section" class="hidden py-16 bg-white border-y border-slate-200/80 transition-all duration-500">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- ================= 4. RESULTS SECTION (EXPANDED TO FULL WIDTH) ================= -->
+    <section id="results-section" class="hidden py-12 md:py-16 min-h-[70vh] bg-white dark:bg-slate-950 border-y border-slate-200/80 dark:border-slate-800/80 transition-all duration-500">
+      <div class="w-full max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-12">
         
         <!-- Section Header -->
-        <div class="flex items-center justify-between border-b border-slate-100 pb-5 mb-8">
+        <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-5 mb-8">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Classification Complete</span>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Prediction Results</h2>
+            <span class="text-sm font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">Classification Complete</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mt-1">Your pet's breed</h2>
           </div>
-          <button type="button" onclick="resetToUpload()" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+          <button type="button" onclick="resetToUpload()" class="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-xl shadow-md hover:shadow-lg transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
             Classify Another Pet
           </button>
         </div>
 
         <!-- Low Confidence Banner (<40%) -->
-        <div id="low-confidence-alert" class="hidden mb-8 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 flex items-start gap-3.5 shadow-sm">
-          <div class="p-2 rounded-xl bg-amber-100 text-amber-600 shrink-0">
+        <div id="low-confidence-alert" class="hidden mb-8 p-4 sm:p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200 flex items-start gap-3.5 shadow-sm">
+          <div class="p-2 rounded-xl bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-300 shrink-0">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
           <div>
-            <h4 class="text-sm font-bold text-amber-900">Low Confidence Match (<span id="low-conf-percent">0%</span>)</h4>
-            <p class="text-xs text-amber-700 mt-0.5 leading-relaxed">
+            <h4 class="text-sm font-bold text-amber-900 dark:text-amber-100">Low Confidence Match (<span id="low-conf-percent">0%</span>)</h4>
+            <p class="text-sm sm:text-sm text-amber-700 dark:text-amber-300 mt-0.5 leading-relaxed">
               We are not quite sure about this photo. For best results, ensure your pet is clearly visible, well-lit, and facing the camera with minimal background clutter.
             </p>
           </div>
         </div>
 
-        <!-- Main Results Grid -->
+        <!-- Main Results Grid (Wide 5-col / 7-col split) -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           <!-- Left Column: Top Breed Card & Top 3 Breakdown -->
           <div class="lg:col-span-5 space-y-6">
             
             <!-- Hero Top Breed Card -->
-            <div class="bg-gradient-to-br from-brand-50/70 via-indigo-50/40 to-slate-50 border border-brand-200/80 rounded-2xl p-6 shadow-sm relative overflow-hidden">
+            <div class="bg-gradient-to-br from-brand-50/70 via-orange-50/40 to-slate-50 dark:from-slate-900 dark:via-slate-900/90 dark:to-orange-950/30 border border-brand-200/80 dark:border-brand-800/60 rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
               <div class="flex items-center justify-between mb-4">
-                <span id="animal-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-brand-600 text-white shadow-sm">
+                <span id="animal-badge" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider bg-brand-600 text-white shadow-sm">
                   <span id="animal-icon">🐶</span>
                   <span id="animal-name">Dog</span>
                 </span>
-                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Top Match</span>
+                <span class="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Top Match</span>
               </div>
 
               <div class="mt-2">
-                <h3 id="top-breed-name" class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                <h3 id="top-breed-name" class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
                   Golden Retriever
                 </h3>
                 <div class="mt-3 flex items-baseline gap-2">
-                  <span id="top-breed-confidence" class="text-4xl font-black text-brand-600 tracking-tight">95.4%</span>
-                  <span class="text-xs font-medium text-slate-500">model confidence</span>
+                  <span id="top-breed-confidence" class="text-4xl sm:text-5xl font-black text-brand-600 dark:text-brand-400 tracking-tight">95.4%</span>
+                  <span class="text-sm font-medium text-slate-500 dark:text-slate-400">confidence</span>
                 </div>
               </div>
             </div>
 
             <!-- Top 3 Predictions Breakdown -->
-            <div class="bg-slate-50/80 border border-slate-200 rounded-2xl p-6">
-              <h4 class="text-sm font-bold uppercase tracking-wider text-slate-700 mb-4 flex items-center gap-2">
-                <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="bg-slate-50/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7">
+              <h4 class="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-4 flex items-center gap-2">
+                <svg class="w-4 h-4 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
                 Top-3 Candidates
@@ -273,17 +328,17 @@
 
           <!-- Right Column: Visual Highlights (Expanded Width) -->
           <div class="lg:col-span-7 space-y-4">
-            <div class="bg-slate-900 text-white rounded-2xl p-6 sm:p-7 shadow-xl border border-slate-800">
+            <div class="bg-slate-900 dark:bg-slate-900/90 text-white rounded-3xl p-6 sm:p-7 shadow-xl border border-slate-800 dark:border-slate-700">
               
               <!-- Tab Header & View Switcher -->
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
                 <div class="flex items-center gap-2">
-                  <div class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-orange-400"></div>
                   <h4 class="text-sm font-bold tracking-wide">See what the AI focused on</h4>
                 </div>
 
                 <!-- View Toggle Buttons -->
-                <div class="inline-flex p-1 rounded-xl bg-slate-800 border border-slate-700 text-xs font-medium">
+                <div class="inline-flex p-1 rounded-xl bg-slate-800 border border-slate-700 text-sm font-medium">
                   <button type="button" id="tab-overlay" onclick="switchVisualView('overlay')" class="px-3 py-1 rounded-lg bg-brand-600 text-white shadow-xs transition">
                     Overlay
                   </button>
@@ -300,33 +355,33 @@
               <div class="mt-5">
                 
                 <!-- View 1: Overlay View -->
-                <div id="view-overlay" class="relative aspect-square sm:aspect-[4/3] rounded-xl overflow-hidden bg-black/40 border border-slate-800 flex items-center justify-center">
+                <div id="view-overlay" class="relative aspect-square sm:aspect-[4/3] rounded-2xl overflow-hidden bg-black/40 border border-slate-800 flex items-center justify-center">
                   <img id="gradcam-overlay-img" src="" alt="AI Focus Overlay" class="w-full h-full object-cover">
-                  <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1 rounded-md text-[11px] font-medium text-slate-200">
+                  <div class="absolute bottom-3 left-3 bg-black/75 backdrop-blur-md px-3 py-1 rounded-md text-[11px] font-medium text-slate-200">
                     AI Focus Overlay
                   </div>
                 </div>
 
                 <!-- View 2: Split View (Side by Side) -->
                 <div id="view-split" class="hidden grid grid-cols-2 gap-3">
-                  <div class="relative aspect-square rounded-xl overflow-hidden bg-black/40 border border-slate-800">
+                  <div class="relative aspect-square rounded-2xl overflow-hidden bg-black/40 border border-slate-800">
                     <img id="split-original-img" src="" alt="Original Photo" class="w-full h-full object-cover">
-                    <div class="absolute bottom-2 left-2 bg-black/70 backdrop-blur-md px-2 py-0.5 rounded text-[10px] text-slate-200">
+                    <div class="absolute bottom-2 left-2 bg-black/75 backdrop-blur-md px-2 py-0.5 rounded text-[10px] text-slate-200">
                       Original
                     </div>
                   </div>
-                  <div class="relative aspect-square rounded-xl overflow-hidden bg-black/40 border border-slate-800">
+                  <div class="relative aspect-square rounded-2xl overflow-hidden bg-black/40 border border-slate-800">
                     <img id="split-gradcam-img" src="" alt="AI Focus Highlight" class="w-full h-full object-cover">
-                    <div class="absolute bottom-2 left-2 bg-black/70 backdrop-blur-md px-2 py-0.5 rounded text-[10px] text-amber-300">
+                    <div class="absolute bottom-2 left-2 bg-black/75 backdrop-blur-md px-2 py-0.5 rounded text-[10px] text-amber-300">
                       AI Focus
                     </div>
                   </div>
                 </div>
 
                 <!-- View 3: Original View -->
-                <div id="view-original" class="hidden relative aspect-square sm:aspect-[4/3] rounded-xl overflow-hidden bg-black/40 border border-slate-800 flex items-center justify-center">
+                <div id="view-original" class="hidden relative aspect-square sm:aspect-[4/3] rounded-2xl overflow-hidden bg-black/40 border border-slate-800 flex items-center justify-center">
                   <img id="pure-original-img" src="" alt="Original Pet Photo" class="w-full h-full object-cover">
-                  <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1 rounded-md text-[11px] font-medium text-slate-200">
+                  <div class="absolute bottom-3 left-3 bg-black/75 backdrop-blur-md px-3 py-1 rounded-md text-[11px] font-medium text-slate-200">
                     Uploaded Pet Photo
                   </div>
                 </div>
@@ -334,7 +389,7 @@
               </div>
 
               <!-- Heatmap Caption -->
-              <div class="mt-4 p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs text-slate-300 flex items-center gap-2.5">
+              <div class="mt-4 p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/60 text-sm text-slate-300 flex items-center gap-2.5">
                 <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0 inline-block"></span>
                 <p class="text-slate-300">Highlighted areas influenced the result most.</p>
               </div>
@@ -347,14 +402,36 @@
       </div>
     </section>
 
-    <!-- ================= 5. HOW IT WORKS ================= -->
-    <section id="how-it-works" class="py-20 bg-slate-50 border-b border-slate-200/80">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- ================= STATS BAND ================= -->
+    <section class="py-14 bg-white dark:bg-slate-950 border-y border-slate-200/80 dark:border-slate-800/80">
+      <div class="w-full max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-12 grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="text-center p-6 rounded-3xl bg-orange-50 dark:bg-slate-900 border border-orange-100 dark:border-slate-800">
+          <div class="text-4xl md:text-5xl font-extrabold text-brand-600 dark:text-brand-400">130+</div>
+          <div class="mt-2 text-base font-medium text-slate-600 dark:text-slate-300">Breeds covered</div>
+        </div>
+        <div class="text-center p-6 rounded-3xl bg-orange-50 dark:bg-slate-900 border border-orange-100 dark:border-slate-800">
+          <div class="text-4xl md:text-5xl font-extrabold text-brand-600 dark:text-brand-400">🐶 🐱</div>
+          <div class="mt-2 text-base font-medium text-slate-600 dark:text-slate-300">Dogs and cats</div>
+        </div>
+        <div class="text-center p-6 rounded-3xl bg-orange-50 dark:bg-slate-900 border border-orange-100 dark:border-slate-800">
+          <div class="text-4xl md:text-5xl font-extrabold text-brand-600 dark:text-brand-400">Top 3</div>
+          <div class="mt-2 text-base font-medium text-slate-600 dark:text-slate-300">Matches with confidence</div>
+        </div>
+        <div class="text-center p-6 rounded-3xl bg-orange-50 dark:bg-slate-900 border border-orange-100 dark:border-slate-800">
+          <div class="text-4xl md:text-5xl font-extrabold text-brand-600 dark:text-brand-400">Focus map</div>
+          <div class="mt-2 text-base font-medium text-slate-600 dark:text-slate-300">See what the AI looked at</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 5. HOW IT WORKS (WIDE CARDS SPANNING THE PAGE) ================= -->
+    <section id="how-it-works" class="py-20 bg-slate-50 dark:bg-slate-950/70 border-b border-slate-200/80 dark:border-slate-800/80">
+      <div class="w-full max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
         
         <div class="text-center max-w-2xl mx-auto mb-14">
-          <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Simple Process</span>
-          <h2 class="text-3xl font-extrabold text-slate-900 mt-2">How It Works</h2>
-          <p class="mt-3 text-slate-600 text-sm sm:text-base">
+          <span class="text-sm font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">Simple Process</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mt-2">How It Works</h2>
+          <p class="mt-3 text-slate-600 dark:text-slate-300 text-sm sm:text-base">
             Three simple steps to classify your pet's breed.
           </p>
         </div>
@@ -362,34 +439,34 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           <!-- Step 1 -->
-          <div class="bg-white rounded-2xl p-7 border border-slate-200/80 shadow-xs hover:shadow-md transition text-center sm:text-left">
-            <div class="w-12 h-12 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-xl mb-5 shadow-2xs">
+          <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition text-center sm:text-left">
+            <div class="w-12 h-12 rounded-2xl bg-brand-100 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 flex items-center justify-center font-bold text-xl mb-5 shadow-2xs">
               📷
             </div>
-            <h3 class="text-lg font-bold text-slate-900 mb-1.5">Upload a photo</h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Upload a photo</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               Choose a clear picture of a dog or cat.
             </p>
           </div>
 
           <!-- Step 2 -->
-          <div class="bg-white rounded-2xl p-7 border border-slate-200/80 shadow-xs hover:shadow-md transition text-center sm:text-left">
-            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xl mb-5 shadow-2xs">
+          <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition text-center sm:text-left">
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl mb-5 shadow-2xs">
               ✨
             </div>
-            <h3 class="text-lg font-bold text-slate-900 mb-1.5">Get instant results</h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Get instant results</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               See the breed and how confident we are.
             </p>
           </div>
 
           <!-- Step 3 -->
-          <div class="bg-white rounded-2xl p-7 border border-slate-200/80 shadow-xs hover:shadow-md transition text-center sm:text-left">
-            <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xl mb-5 shadow-2xs">
+          <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition text-center sm:text-left">
+            <div class="w-12 h-12 rounded-2xl bg-orange-100 dark:bg-orange-950/80 text-orange-600 dark:text-orange-400 flex items-center justify-center font-bold text-xl mb-5 shadow-2xs">
               🔍
             </div>
-            <h3 class="text-lg font-bold text-slate-900 mb-1.5">Learn more</h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Learn more</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               Find out what the AI focused on in your photo.
             </p>
           </div>
@@ -399,14 +476,14 @@
       </div>
     </section>
 
-    <!-- ================= 6. ABOUT SECTION ================= -->
-    <section id="about" class="py-20 bg-white">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- ================= 6. ABOUT SECTION (FULL WIDTH) ================= -->
+    <section id="about" class="py-20 bg-white dark:bg-slate-950">
+      <div class="w-full max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
         
         <div class="text-center max-w-2xl mx-auto mb-14">
-          <span class="text-xs font-bold uppercase tracking-wider text-brand-600">About PetVision</span>
-          <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Built for Pet Lovers</h2>
-          <p class="mt-4 text-slate-600 text-base leading-relaxed">
+          <span class="text-sm font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">About PetVision</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mt-2">Built for Pet Lovers</h2>
+          <p class="mt-4 text-slate-600 dark:text-slate-300 text-base leading-relaxed">
             PetVision helps pet lovers find out the breed of their dog or cat in seconds. Whether you're curious about a rescue pup, meeting a friend's new kitten, or simply testing your pet knowledge, our smart visual classifier makes discovering breeds simple and fun.
           </p>
         </div>
@@ -415,34 +492,34 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           
           <!-- Card 1 -->
-          <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200/80 hover:shadow-md transition">
-            <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-lg mb-4 shadow-2xs">
+          <div class="bg-slate-50 dark:bg-slate-900/80 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-2xl bg-brand-100 dark:bg-brand-950 text-brand-600 dark:text-brand-400 flex items-center justify-center font-bold text-lg mb-4 shadow-2xs">
               🐾
             </div>
-            <h3 class="text-base font-bold text-slate-900 mb-1.5">130+ breeds covered</h3>
-            <p class="text-xs text-slate-600 leading-relaxed">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1.5">130+ breeds covered</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               From popular favorites like Golden Retrievers and Siamese cats to rarer purebred companions.
             </p>
           </div>
 
           <!-- Card 2 -->
-          <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200/80 hover:shadow-md transition">
-            <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg mb-4 shadow-2xs">
+          <div class="bg-slate-50 dark:bg-slate-900/80 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-lg mb-4 shadow-2xs">
               ⚡
             </div>
-            <h3 class="text-base font-bold text-slate-900 mb-1.5">Results in seconds</h3>
-            <p class="text-xs text-slate-600 leading-relaxed">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1.5">Results in seconds</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               Just drop in a photo to immediately view the top breed match and confidence levels.
             </p>
           </div>
 
           <!-- Card 3 -->
-          <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200/80 hover:shadow-md transition">
-            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-lg mb-4 shadow-2xs">
+          <div class="bg-slate-50 dark:bg-slate-900/80 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-2xl bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 flex items-center justify-center font-bold text-lg mb-4 shadow-2xs">
               🔍
             </div>
-            <h3 class="text-base font-bold text-slate-900 mb-1.5">See what the AI sees</h3>
-            <p class="text-xs text-slate-600 leading-relaxed">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1.5">See what the AI sees</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               Explore visual highlights showing which distinctive facial features and fur patterns guided the prediction.
             </p>
           </div>
@@ -450,12 +527,12 @@
         </div>
 
         <!-- Helpful Tip Box -->
-        <div class="max-w-2xl mx-auto p-4 rounded-2xl bg-amber-50 border border-amber-200/90 text-amber-900 flex items-center gap-3.5 shadow-2xs">
-          <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 font-bold text-sm">
+        <div class="max-w-2xl mx-auto p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/90 dark:border-amber-800/60 text-amber-900 dark:text-amber-200 flex items-center gap-3.5 shadow-2xs">
+          <div class="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-300 flex items-center justify-center shrink-0 font-bold text-sm">
             💡
           </div>
-          <p class="text-xs sm:text-sm text-amber-800 font-medium">
-            <strong class="font-semibold text-amber-900">Helpful tip:</strong> For best results, use a clear, well-lit photo with one animal.
+          <p class="text-sm sm:text-sm text-amber-800 dark:text-amber-200 font-medium">
+            <strong class="font-semibold text-amber-900 dark:text-amber-100">Helpful tip:</strong> For best results, use a clear, well-lit photo with one animal.
           </p>
         </div>
 
@@ -464,26 +541,26 @@
   </main>
 
   <!-- ================= 7. FOOTER ================= -->
-  <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+  <footer class="bg-slate-900 dark:bg-slate-950 text-slate-400 py-12 border-t border-slate-800 text-sm">
+    <div class="w-full max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
       
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold text-sm">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center text-white font-bold text-sm">
           PV
         </div>
         <div>
           <span class="font-bold text-white tracking-tight">PetVision</span>
-          <span class="block text-xs text-slate-500">AI Dog & Cat Breed Classification</span>
+          <span class="block text-sm text-slate-500">AI Dog & Cat Breed Classification</span>
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center gap-6 text-xs text-slate-400">
+      <div class="flex flex-wrap items-center gap-6 text-sm text-slate-400">
         <a href="#home" class="hover:text-white transition">Home</a>
         <a href="#how-it-works" class="hover:text-white transition">How it works</a>
         <a href="#about" class="hover:text-white transition">About</a>
       </div>
 
-      <div class="text-xs text-slate-500">
+      <div class="text-sm text-slate-500">
         Made for dog and cat lovers everywhere
       </div>
 
@@ -492,6 +569,14 @@
 
   <!-- ================= CLIENT JAVASCRIPT ================= -->
   <script>
+    // Theme toggle interaction
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+      });
+    }
+
     // State variables
     let selectedFile = null;
     let originalDataUrl = null;
@@ -551,7 +636,7 @@
       dropZone.addEventListener(eventName, (e) => {
         e.preventDefault();
         e.stopPropagation();
-        dropZone.classList.add('border-brand-500', 'bg-brand-50/50');
+        dropZone.classList.add('border-brand-500', 'bg-brand-50/50', 'dark:bg-brand-950/40');
       }, false);
     });
 
@@ -559,7 +644,7 @@
       dropZone.addEventListener(eventName, (e) => {
         e.preventDefault();
         e.stopPropagation();
-        dropZone.classList.remove('border-brand-500', 'bg-brand-50/50');
+        dropZone.classList.remove('border-brand-500', 'bg-brand-50/50', 'dark:bg-brand-950/40');
       }, false);
     });
 
@@ -592,8 +677,8 @@
       previewContainer.classList.add('hidden');
       uploadPlaceholder.classList.remove('hidden');
       analyzeBtn.disabled = true;
-      analyzeBtn.classList.add('bg-slate-300', 'cursor-not-allowed');
-      analyzeBtn.classList.remove('bg-brand-600', 'hover:bg-brand-700', 'cursor-pointer', 'shadow-brand-500/25');
+      analyzeBtn.classList.add('bg-slate-300', 'dark:bg-slate-800', 'cursor-not-allowed');
+      analyzeBtn.classList.remove('bg-brand-600', 'hover:bg-brand-700', 'dark:bg-brand-500', 'dark:hover:bg-brand-600', 'cursor-pointer', 'shadow-brand-500/25');
       dismissError();
     }
 
@@ -631,8 +716,8 @@
 
         // Enable Action button
         analyzeBtn.disabled = false;
-        analyzeBtn.classList.remove('bg-slate-300', 'cursor-not-allowed');
-        analyzeBtn.classList.add('bg-brand-600', 'hover:bg-brand-700', 'cursor-pointer', 'shadow-brand-500/25');
+        analyzeBtn.classList.remove('bg-slate-300', 'dark:bg-slate-800', 'cursor-not-allowed');
+        analyzeBtn.classList.add('bg-brand-600', 'hover:bg-brand-700', 'dark:bg-brand-500', 'dark:hover:bg-brand-600', 'dark:text-slate-950', 'dark:font-bold', 'cursor-pointer', 'shadow-brand-500/25');
       };
       reader.readAsDataURL(file);
     }
@@ -687,13 +772,13 @@
       animalName.textContent = animal;
       if (animal === 'Dog') {
         animalIcon.textContent = '🐶';
-        animalBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-600 text-white shadow-sm';
+        animalBadge.className = 'inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider bg-brand-600 dark:bg-brand-500 text-white dark:text-slate-950 shadow-sm';
       } else if (animal === 'Cat') {
         animalIcon.textContent = '🐱';
-        animalBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-violet-600 text-white shadow-sm';
+        animalBadge.className = 'inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider bg-amber-600 dark:bg-amber-500 text-white dark:text-slate-950 shadow-sm';
       } else {
         animalIcon.textContent = '🐾';
-        animalBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-700 text-white shadow-sm';
+        animalBadge.className = 'inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider bg-slate-700 text-white shadow-sm';
       }
 
       // 2. Top Breed & Confidence
@@ -714,20 +799,20 @@
       top3List.innerHTML = '';
       data.top3.forEach((item, index) => {
         const pct = (item.confidence * 100).toFixed(1);
-        const rankColor = index === 0 ? 'bg-brand-600' : index === 1 ? 'bg-indigo-400' : 'bg-slate-400';
-        const rankText = index === 0 ? 'text-brand-600 font-bold' : 'text-slate-600 font-medium';
+        const rankColor = index === 0 ? 'bg-brand-600 dark:bg-brand-400' : index === 1 ? 'bg-amber-500 dark:bg-amber-400' : 'bg-slate-400 dark:bg-slate-500';
+        const rankText = index === 0 ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-600 dark:text-slate-300 font-medium';
 
         const row = document.createElement('div');
         row.className = 'group';
         row.innerHTML = `
-          <div class="flex items-center justify-between text-xs mb-1.5">
+          <div class="flex items-center justify-between text-sm mb-1.5">
             <span class="${rankText} flex items-center gap-2">
-              <span class="w-4 text-slate-400 text-[10px]">#${index + 1}</span>
+              <span class="w-4 text-slate-400 dark:text-slate-500 text-[10px]">#${index + 1}</span>
               ${item.breed}
             </span>
-            <span class="font-bold text-slate-700">${pct}%</span>
+            <span class="font-bold text-slate-700 dark:text-slate-200">${pct}%</span>
           </div>
-          <div class="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+          <div class="w-full h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
             <div class="${rankColor} h-full rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
           </div>
         `;
@@ -735,7 +820,7 @@
 
         // Animate width after insertion
         setTimeout(() => {
-          row.querySelector(`.${rankColor}`).style.width = `${pct}%`;
+          row.querySelector(`.${rankColor.split(' ')[0]}`).style.width = `${pct}%`;
         }, 80);
       });
 
@@ -750,8 +835,9 @@
       switchVisualView('overlay');
 
       // Reveal Results Section and smooth scroll
+      document.getElementById('home').classList.add('hidden');
       resultsSection.classList.remove('hidden');
-      resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function switchVisualView(view) {
@@ -782,8 +868,9 @@
 
     function resetToUpload() {
       resultsSection.classList.add('hidden');
+      document.getElementById('home').classList.remove('hidden');
       clearSelectedFile();
-      document.getElementById('upload-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   </script>
 </body>
