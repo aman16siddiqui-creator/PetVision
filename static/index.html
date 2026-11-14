@@ -212,8 +212,7 @@
 
           <!-- Wide Upload Dropzone -->
           <div id="drop-zone" class="relative group border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-400 rounded-2xl py-12 sm:py-16 px-6 text-center transition-all bg-slate-50/70 dark:bg-slate-800/40 hover:bg-brand-50/30 dark:hover:bg-brand-950/20 cursor-pointer">
-            <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-            
+<input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">            
             <div id="upload-placeholder" class="flex flex-col items-center">
               <div class="w-20 h-20 rounded-3xl bg-brand-100/80 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform duration-200 shadow-sm">
                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -722,8 +721,8 @@
 
       // Check file size
       if (file.size > MAX_SIZE_BYTES) {
-        showError('File Too Large', `The selected image is ${(file.size / (1024 * 1024)).toFixed(2)} MB. Please choose an image smaller than 5 MB.`);
         clearSelectedFile();
+        showError('File Too Large', `The selected image is ${(file.size / (1024 * 1024)).toFixed(2)} MB. Please choose an image smaller than 5 MB.`);
         return;
       }
 
@@ -731,8 +730,8 @@
       const extension = file.name.split('.').pop().toLowerCase();
       const validExtensions = ['jpg', 'jpeg', 'png', 'webp'];
       if (!validExtensions.includes(extension)) {
-        showError('Unsupported File Format', `File extension .${extension} is not supported. Please upload a JPG, PNG, or WebP photo.`);
         clearSelectedFile();
+        showError('Unsupported File Format', `File extension .${extension} is not supported. Please upload a JPG, PNG, or WebP photo.`);
         return;
       }
 
