@@ -56,6 +56,21 @@
     }
   </script>
   <style>
+    /* ===== Scanner ===== */
+    @keyframes scanmove { 0% { top: 0; } 50% { top: calc(100% - 3px); } 100% { top: 0; } }
+    .scan-line { position: absolute; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #fb923c, #ffffff, #fb923c, transparent); box-shadow: 0 0 18px 6px rgba(249,115,22,.55); animation: scanmove 2.2s ease-in-out infinite; }
+    .scan-line::after { content: ''; position: absolute; left: 0; right: 0; bottom: 3px; height: 80px; background: linear-gradient(to top, rgba(249,115,22,.35), transparent); }
+    .scan-grid { background-image: linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px); background-size: 28px 28px; }
+    .scan-corner { position: absolute; width: 34px; height: 34px; border: 0 solid #fb923c; }
+    .scan-corner.tl { top: 12px; left: 12px; border-top-width: 4px; border-left-width: 4px; border-top-left-radius: 10px; }
+    .scan-corner.tr { top: 12px; right: 12px; border-top-width: 4px; border-right-width: 4px; border-top-right-radius: 10px; }
+    .scan-corner.bl { bottom: 12px; left: 12px; border-bottom-width: 4px; border-left-width: 4px; border-bottom-left-radius: 10px; }
+    .scan-corner.br { bottom: 12px; right: 12px; border-bottom-width: 4px; border-right-width: 4px; border-bottom-right-radius: 10px; }
+    /* ===== Hero background ===== */
+    @keyframes pawstep { 0%, 100% { opacity: 0; transform: translateY(0) scale(.8); } 15% { opacity: .5; transform: translateY(0) scale(1); } 60% { opacity: .35; } 85% { opacity: 0; } }
+    .paw-trail span { position: absolute; animation: pawstep 5s ease-in-out infinite; }
+    @media (prefers-reduced-motion: reduce) { .scan-line, .paw-trail span { animation: none; } }
+
     @media (min-width: 1024px) { html { font-size: 18px; } }
     @media (min-width: 1536px) { html { font-size: 20px; } }
     @keyframes pulse-subtle {
@@ -124,17 +139,34 @@
   <main class="flex-grow">
     <!-- ================= 2. HERO SECTION ================= -->
     <section id="home" class="relative pt-14 pb-24 md:pt-20 md:pb-32 overflow-hidden bg-gradient-to-b from-slate-50 via-orange-50/15 to-slate-50 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950">
+      <!-- Hero background: cat and dog watermark + walking paw trail -->
+      <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden text-brand-600 dark:text-brand-400" aria-hidden="true">
+        <div class="absolute -left-16 bottom-4 w-[34rem] h-[30rem] opacity-[0.07] -rotate-6">
+          <svg viewBox="0 0 68 58" class="w-full h-full" fill="currentColor" aria-hidden="true">
+            <ellipse cx="22" cy="45" rx="11" ry="10"/><path d="M10 24 L9.5 5 L21 14 Z"/><path d="M34 24 L34.5 5 L23 14 Z"/><circle cx="22" cy="24" r="12.5"/>
+            <ellipse cx="46" cy="47" rx="12" ry="10"/><ellipse cx="34.5" cy="26" rx="4.2" ry="8.5" transform="rotate(14 34.5 26)"/><ellipse cx="57.5" cy="26" rx="4.2" ry="8.5" transform="rotate(-14 57.5 26)"/><circle cx="46" cy="27" r="11.5"/>
+          </svg>
+        </div>
+        <div class="absolute -right-10 -top-6 w-[22rem] h-[19rem] opacity-[0.06] rotate-12">
+          <svg viewBox="0 0 68 58" class="w-full h-full" fill="currentColor" aria-hidden="true">
+            <ellipse cx="22" cy="45" rx="11" ry="10"/><path d="M10 24 L9.5 5 L21 14 Z"/><path d="M34 24 L34.5 5 L23 14 Z"/><circle cx="22" cy="24" r="12.5"/>
+            <ellipse cx="46" cy="47" rx="12" ry="10"/><ellipse cx="34.5" cy="26" rx="4.2" ry="8.5" transform="rotate(14 34.5 26)"/><ellipse cx="57.5" cy="26" rx="4.2" ry="8.5" transform="rotate(-14 57.5 26)"/><circle cx="46" cy="27" r="11.5"/>
+          </svg>
+        </div>
+        <div class="paw-trail absolute inset-x-0 bottom-0 h-40 opacity-60"><span style="left:4%;bottom:6%;animation-delay:0.00s;transform:rotate(90deg)"><svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="5.5" cy="11" rx="2" ry="2.6" transform="rotate(-20 5.5 11)"/><ellipse cx="9.6" cy="6.2" rx="2.1" ry="2.8" transform="rotate(-8 9.6 6.2)"/><ellipse cx="14.4" cy="6.2" rx="2.1" ry="2.8" transform="rotate(8 14.4 6.2)"/><ellipse cx="18.5" cy="11" rx="2" ry="2.6" transform="rotate(20 18.5 11)"/><path d="M12 11.5c-3 0-6 3.4-6 6 0 1.9 1.5 2.8 3.1 2.8 1.1 0 1.8-.6 2.9-.6s1.8.6 2.9.6c1.6 0 3.1-.9 3.1-2.8 0-2.6-3-6-6-6z"/></svg></span><span style="left:16%;bottom:18%;animation-delay:0.55s;transform:rotate(90deg)"><svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="5.5" cy="11" rx="2" ry="2.6" transform="rotate(-20 5.5 11)"/><ellipse cx="9.6" cy="6.2" rx="2.1" ry="2.8" transform="rotate(-8 9.6 6.2)"/><ellipse cx="14.4" cy="6.2" rx="2.1" ry="2.8" transform="rotate(8 14.4 6.2)"/><ellipse cx="18.5" cy="11" rx="2" ry="2.6" transform="rotate(20 18.5 11)"/><path d="M12 11.5c-3 0-6 3.4-6 6 0 1.9 1.5 2.8 3.1 2.8 1.1 0 1.8-.6 2.9-.6s1.8.6 2.9.6c1.6 0 3.1-.9 3.1-2.8 0-2.6-3-6-6-6z"/></svg></span><span style="left:28%;bottom:6%;animation-delay:1.10s;transform:rotate(90deg)"><svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="5.5" cy="11" rx="2" ry="2.6" transform="rotate(-20 5.5 11)"/><ellipse cx="9.6" cy="6.2" rx="2.1" ry="2.8" transform="rotate(-8 9.6 6.2)"/><ellipse cx="14.4" cy="6.2" rx="2.1" ry="2.8" transform="rotate(8 14.4 6.2)"/><ellipse cx="18.5" cy="11" rx="2" ry="2.6" transform="rotate(20 18.5 11)"/><path d="M12 11.5c-3 0-6 3.4-6 6 0 1.9 1.5 2.8 3.1 2.8 1.1 0 1.8-.6 2.9-.6s1.8.6 2.9.6c1.6 0 3.1-.9 3.1-2.8 0-2.6-3-6-6-6z"/></svg></span><span style="left:40%;bottom:18%;animation-delay:1.65s;transform:rotate(90deg)"><svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="5.5" cy="11" rx="2" ry="2.6" transform="rotate(-20 5.5 11)"/><ellipse cx="9.6" cy="6.2" rx="2.1" ry="2.8" transform="rotate(-8 9.6 6.2)"/><ellipse cx="14.4" cy="6.2" rx="2.1" ry="2.8" transform="rotate(8 14.4 6.2)"/><ellipse cx="18.5" cy="11" rx="2" ry="2.6" transform="rotate(20 18.5 11)"/><path d="M12 11.5c-3 0-6 3.4-6 6 0 1.9 1.5 2.8 3.1 2.8 1.1 0 1.8-.6 2.9-.6s1.8.6 2.9.6c1.6 0 3.1-.9 3.1-2.8 0-2.6-3-6-6-6z"/></svg></span><span style="left:52%;bottom:6%;animation-delay:2.20s;transform:rotate(90deg)"><svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="5.5" cy="11" rx="2" ry="2.6" transform="rotate(-20 5.5 11)"/><ellipse cx="9.6" cy="6.2" rx="2.1" ry="2.8" transform="rotate(-8 9.6 6.2)"/><ellipse cx="14.4" cy="6.2" rx="2.1" ry="2.8" transform="rotate(8 14.4 6.2)"/><ellipse cx="18.5" cy="11" rx="2" ry="2.6" transform="rotate(20 18.5 11)"/><path d="M12 11.5c-3 0-6 3.4-6 6 0 1.9 1.5 2.8 3.1 2.8 1.1 0 1.8-.6 2.9-.6s1.8.6 2.9.6c1.6 0 3.1-.9 3.1-2.8 0-2.6-3-6-6-6z"/></svg></span><span style="left:64%;bottom:18%;animation-delay:2.75s;transform:rotate(90deg)"><svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="5.5" cy="11" rx="2" ry="2.6" transform="rotate(-20 5.5 11)"/><ellipse cx="9.6" cy="6.2" rx="2.1" ry="2.8" transform="rotate(-8 9.6 6.2)"/><ellipse cx="14.4" cy="6.2" rx="2.1" ry="2.8" transform="rotate(8 14.4 6.2)"/><ellipse cx="18.5" cy="11" rx="2" ry="2.6" transform="rotate(20 18.5 11)"/><path d="M12 11.5c-3 0-6 3.4-6 6 0 1.9 1.5 2.8 3.1 2.8 1.1 0 1.8-.6 2.9-.6s1.8.6 2.9.6c1.6 0 3.1-.9 3.1-2.8 0-2.6-3-6-6-6z"/></svg></span><span style="left:76%;bottom:6%;animation-delay:3.30s;transform:rotate(90deg)"><svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="5.5" cy="11" rx="2" ry="2.6" transform="rotate(-20 5.5 11)"/><ellipse cx="9.6" cy="6.2" rx="2.1" ry="2.8" transform="rotate(-8 9.6 6.2)"/><ellipse cx="14.4" cy="6.2" rx="2.1" ry="2.8" transform="rotate(8 14.4 6.2)"/><ellipse cx="18.5" cy="11" rx="2" ry="2.6" transform="rotate(20 18.5 11)"/><path d="M12 11.5c-3 0-6 3.4-6 6 0 1.9 1.5 2.8 3.1 2.8 1.1 0 1.8-.6 2.9-.6s1.8.6 2.9.6c1.6 0 3.1-.9 3.1-2.8 0-2.6-3-6-6-6z"/></svg></span><span style="left:88%;bottom:18%;animation-delay:3.85s;transform:rotate(90deg)"><svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="5.5" cy="11" rx="2" ry="2.6" transform="rotate(-20 5.5 11)"/><ellipse cx="9.6" cy="6.2" rx="2.1" ry="2.8" transform="rotate(-8 9.6 6.2)"/><ellipse cx="14.4" cy="6.2" rx="2.1" ry="2.8" transform="rotate(8 14.4 6.2)"/><ellipse cx="18.5" cy="11" rx="2" ry="2.6" transform="rotate(20 18.5 11)"/><path d="M12 11.5c-3 0-6 3.4-6 6 0 1.9 1.5 2.8 3.1 2.8 1.1 0 1.8-.6 2.9-.6s1.8.6 2.9.6c1.6 0 3.1-.9 3.1-2.8 0-2.6-3-6-6-6z"/></svg></span></div>
+      </div>
+
       <!-- Decorative ambient glow -->
       <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1100px] h-[550px] bg-gradient-to-tr from-brand-300/20 via-amber-200/15 to-orange-300/15 dark:from-brand-900/15 dark:via-amber-900/15 dark:to-orange-950/25 rounded-full blur-3xl -z-10 pointer-events-none"></div>
 
-      <div class="w-full max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="relative z-10 w-full max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-12">
         
         <div class="grid lg:grid-cols-2 gap-12 xl:gap-20 items-center">
         <!-- HEADING -->
         <div class="text-center lg:text-left max-w-3xl mx-auto lg:mx-0">
           <!-- Non-AI Friendly Badge -->
           <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-100/70 dark:bg-orange-950/70 border border-orange-300/60 dark:border-orange-800/60 text-orange-800 dark:text-orange-300 text-sm font-semibold uppercase tracking-wider mb-5">
-            <span>🐾</span>
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="5.5" cy="11" rx="2" ry="2.6" transform="rotate(-20 5.5 11)"/><ellipse cx="9.6" cy="6.2" rx="2.1" ry="2.8" transform="rotate(-8 9.6 6.2)"/><ellipse cx="14.4" cy="6.2" rx="2.1" ry="2.8" transform="rotate(8 14.4 6.2)"/><ellipse cx="18.5" cy="11" rx="2" ry="2.6" transform="rotate(20 18.5 11)"/><path d="M12 11.5c-3 0-6 3.4-6 6 0 1.9 1.5 2.8 3.1 2.8 1.1 0 1.8-.6 2.9-.6s1.8.6 2.9.6c1.6 0 3.1-.9 3.1-2.8 0-2.6-3-6-6-6z"/></svg>
             <span>For Dog & Cat Lovers Everywhere</span>
           </div>
 
@@ -150,13 +182,13 @@
           <!-- 3 Quick Value Badges -->
           <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-4 mt-8 text-sm font-medium text-slate-600 dark:text-slate-300">
             <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-2xs">
-              ⚡ <span>Instant Results</span>
+              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> <span>Instant Results</span>
             </span>
             <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-2xs">
-              🎯 <span>Confidence Scores</span>
+              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 15l4-4 3 3 5-6"/></svg> <span>Confidence Scores</span>
             </span>
             <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-2xs">
-              🔍 <span>Visual Insights</span>
+              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg> <span>Visual Insights</span>
             </span>
           </div>
         </div>
@@ -205,6 +237,17 @@
             <div id="preview-container" class="hidden flex flex-col items-center">
               <div class="relative group/preview w-full max-w-sm aspect-square rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-lg bg-black/5 dark:bg-black/20">
                 <img id="image-preview" src="" alt="Selected pet" class="w-full h-full object-cover">
+                <!-- Scanner overlay (shown while classifying) -->
+                <div id="scan-overlay" class="hidden absolute inset-0 pointer-events-none overflow-hidden">
+                  <div class="absolute inset-0 bg-orange-950/25 scan-grid"></div>
+                  <div class="scan-line"></div>
+                  <span class="scan-corner tl"></span><span class="scan-corner tr"></span>
+                  <span class="scan-corner bl"></span><span class="scan-corner br"></span>
+                  <div class="absolute bottom-3 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-slate-900/80 backdrop-blur text-white text-sm font-semibold flex items-center gap-2 whitespace-nowrap">
+                    <span class="w-2 h-2 rounded-full bg-orange-400 animate-pulse"></span>
+                    <span id="scan-status">Scanning image…</span>
+                  </div>
+                </div>
                 <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center text-white text-sm font-medium">
                   Click to choose a different photo
                 </div>
@@ -233,16 +276,6 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </button>
-          </div>
-
-          <!-- Loading Spinner State -->
-          <div id="loading-spinner" class="hidden mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col items-center text-center">
-            <div class="relative w-12 h-12 mb-3">
-              <div class="absolute inset-0 rounded-full border-4 border-brand-100 dark:border-brand-950"></div>
-              <div class="absolute inset-0 rounded-full border-4 border-brand-600 dark:border-brand-400 border-t-transparent animate-spin"></div>
-            </div>
-            <p class="text-base font-semibold text-slate-800 dark:text-slate-100">Processing Pet Image...</p>
-            <p id="loading-subtext" class="text-sm sm:text-sm text-slate-500 dark:text-slate-400 mt-1">Analyzing pet features and generating your results...</p>
           </div>
 
         </div>
@@ -293,7 +326,7 @@
             <div class="bg-gradient-to-br from-brand-50/70 via-orange-50/40 to-slate-50 dark:from-slate-900 dark:via-slate-900/90 dark:to-orange-950/30 border border-brand-200/80 dark:border-brand-800/60 rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
               <div class="flex items-center justify-between mb-4">
                 <span id="animal-badge" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider bg-brand-600 text-white shadow-sm">
-                  <span id="animal-icon">🐶</span>
+                  <span id="animal-icon" class="inline-flex"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="5.5" cy="11" rx="2" ry="2.6" transform="rotate(-20 5.5 11)"/><ellipse cx="9.6" cy="6.2" rx="2.1" ry="2.8" transform="rotate(-8 9.6 6.2)"/><ellipse cx="14.4" cy="6.2" rx="2.1" ry="2.8" transform="rotate(8 14.4 6.2)"/><ellipse cx="18.5" cy="11" rx="2" ry="2.6" transform="rotate(20 18.5 11)"/><path d="M12 11.5c-3 0-6 3.4-6 6 0 1.9 1.5 2.8 3.1 2.8 1.1 0 1.8-.6 2.9-.6s1.8.6 2.9.6c1.6 0 3.1-.9 3.1-2.8 0-2.6-3-6-6-6z"/></svg></span>
                   <span id="animal-name">Dog</span>
                 </span>
                 <span class="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Top Match</span>
@@ -410,8 +443,8 @@
           <div class="mt-2 text-base font-medium text-slate-600 dark:text-slate-300">Breeds covered</div>
         </div>
         <div class="text-center p-6 rounded-3xl bg-orange-50 dark:bg-slate-900 border border-orange-100 dark:border-slate-800">
-          <div class="text-4xl md:text-5xl font-extrabold text-brand-600 dark:text-brand-400">🐶 🐱</div>
-          <div class="mt-2 text-base font-medium text-slate-600 dark:text-slate-300">Dogs and cats</div>
+          <div class="text-4xl md:text-5xl font-extrabold text-brand-600 dark:text-brand-400">Dog &amp; Cat</div>
+          <div class="mt-2 text-base font-medium text-slate-600 dark:text-slate-300">Both pets, one tool</div>
         </div>
         <div class="text-center p-6 rounded-3xl bg-orange-50 dark:bg-slate-900 border border-orange-100 dark:border-slate-800">
           <div class="text-4xl md:text-5xl font-extrabold text-brand-600 dark:text-brand-400">Top 3</div>
@@ -441,7 +474,7 @@
           <!-- Step 1 -->
           <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition text-center sm:text-left">
             <div class="w-12 h-12 rounded-2xl bg-brand-100 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 flex items-center justify-center font-bold text-xl mb-5 shadow-2xs">
-              📷
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             </div>
             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Upload a photo</h3>
             <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -452,7 +485,7 @@
           <!-- Step 2 -->
           <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition text-center sm:text-left">
             <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl mb-5 shadow-2xs">
-              ✨
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Get instant results</h3>
             <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -463,7 +496,7 @@
           <!-- Step 3 -->
           <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200/80 dark:border-slate-800 shadow-xs hover:shadow-md transition text-center sm:text-left">
             <div class="w-12 h-12 rounded-2xl bg-orange-100 dark:bg-orange-950/80 text-orange-600 dark:text-orange-400 flex items-center justify-center font-bold text-xl mb-5 shadow-2xs">
-              🔍
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
             </div>
             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Learn more</h3>
             <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -494,7 +527,7 @@
           <!-- Card 1 -->
           <div class="bg-slate-50 dark:bg-slate-900/80 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 hover:shadow-md transition">
             <div class="w-10 h-10 rounded-2xl bg-brand-100 dark:bg-brand-950 text-brand-600 dark:text-brand-400 flex items-center justify-center font-bold text-lg mb-4 shadow-2xs">
-              🐾
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="5.5" cy="11" rx="2" ry="2.6" transform="rotate(-20 5.5 11)"/><ellipse cx="9.6" cy="6.2" rx="2.1" ry="2.8" transform="rotate(-8 9.6 6.2)"/><ellipse cx="14.4" cy="6.2" rx="2.1" ry="2.8" transform="rotate(8 14.4 6.2)"/><ellipse cx="18.5" cy="11" rx="2" ry="2.6" transform="rotate(20 18.5 11)"/><path d="M12 11.5c-3 0-6 3.4-6 6 0 1.9 1.5 2.8 3.1 2.8 1.1 0 1.8-.6 2.9-.6s1.8.6 2.9.6c1.6 0 3.1-.9 3.1-2.8 0-2.6-3-6-6-6z"/></svg>
             </div>
             <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1.5">130+ breeds covered</h3>
             <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -505,7 +538,7 @@
           <!-- Card 2 -->
           <div class="bg-slate-50 dark:bg-slate-900/80 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 hover:shadow-md transition">
             <div class="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-lg mb-4 shadow-2xs">
-              ⚡
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
             <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1.5">Results in seconds</h3>
             <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -516,7 +549,7 @@
           <!-- Card 3 -->
           <div class="bg-slate-50 dark:bg-slate-900/80 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 hover:shadow-md transition">
             <div class="w-10 h-10 rounded-2xl bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 flex items-center justify-center font-bold text-lg mb-4 shadow-2xs">
-              🔍
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
             </div>
             <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1.5">See what the AI sees</h3>
             <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -529,7 +562,7 @@
         <!-- Helpful Tip Box -->
         <div class="max-w-2xl mx-auto p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/90 dark:border-amber-800/60 text-amber-900 dark:text-amber-200 flex items-center gap-3.5 shadow-2xs">
           <div class="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-300 flex items-center justify-center shrink-0 font-bold text-sm">
-            💡
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </div>
           <p class="text-sm sm:text-sm text-amber-800 dark:text-amber-200 font-medium">
             <strong class="font-semibold text-amber-900 dark:text-amber-100">Helpful tip:</strong> For best results, use a clear, well-lit photo with one animal.
@@ -592,7 +625,9 @@
     const previewFilesize = document.getElementById('preview-filesize');
     const removeBtn = document.getElementById('remove-btn');
     const analyzeBtn = document.getElementById('analyze-btn');
-    const loadingSpinner = document.getElementById('loading-spinner');
+    const scanOverlay = document.getElementById('scan-overlay');
+    const scanStatus = document.getElementById('scan-status');
+    let scanTimer = null;
     const errorAlert = document.getElementById('error-alert');
     const errorTitle = document.getElementById('error-title');
     const errorMessage = document.getElementById('error-message');
@@ -753,16 +788,25 @@
     });
 
     function setLoadingState(isLoading) {
+      const label = analyzeBtn.querySelector('span');
       if (isLoading) {
-        loadingSpinner.classList.remove('hidden');
+        scanOverlay.classList.remove('hidden');
+        const steps = ['Scanning image…', 'Detecting dog or cat…', 'Locating facial features…', 'Matching breeds…', 'Preparing results…'];
+        let i = 0;
+        scanStatus.textContent = steps[0];
+        clearInterval(scanTimer);
+        scanTimer = setInterval(() => { i = Math.min(i + 1, steps.length - 1); scanStatus.textContent = steps[i]; }, 1200);
         analyzeBtn.disabled = true;
         analyzeBtn.classList.add('opacity-75', 'cursor-not-allowed');
-        dropZone.classList.add('pointer-events-none', 'opacity-80');
+        if (label) label.textContent = 'Scanning…';
+        dropZone.classList.add('pointer-events-none');
       } else {
-        loadingSpinner.classList.add('hidden');
+        clearInterval(scanTimer);
+        scanOverlay.classList.add('hidden');
         analyzeBtn.disabled = false;
         analyzeBtn.classList.remove('opacity-75', 'cursor-not-allowed');
-        dropZone.classList.remove('pointer-events-none', 'opacity-80');
+        if (label) label.textContent = 'Classify Breed';
+        dropZone.classList.remove('pointer-events-none');
       }
     }
 
@@ -771,13 +815,13 @@
       const animal = data.animal || 'Pet';
       animalName.textContent = animal;
       if (animal === 'Dog') {
-        animalIcon.textContent = '🐶';
+        /* icon is static */
         animalBadge.className = 'inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider bg-brand-600 dark:bg-brand-500 text-white dark:text-slate-950 shadow-sm';
       } else if (animal === 'Cat') {
-        animalIcon.textContent = '🐱';
+        /* icon is static */
         animalBadge.className = 'inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider bg-amber-600 dark:bg-amber-500 text-white dark:text-slate-950 shadow-sm';
       } else {
-        animalIcon.textContent = '🐾';
+        /* icon is static */
         animalBadge.className = 'inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider bg-slate-700 text-white shadow-sm';
       }
 
