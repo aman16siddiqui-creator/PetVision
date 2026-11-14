@@ -721,8 +721,8 @@
 
       // Check file size
       if (file.size > MAX_SIZE_BYTES) {
-        clearSelectedFile();
         showError('File Too Large', `The selected image is ${(file.size / (1024 * 1024)).toFixed(2)} MB. Please choose an image smaller than 5 MB.`);
+        clearSelectedFile();
         return;
       }
 
@@ -730,8 +730,8 @@
       const extension = file.name.split('.').pop().toLowerCase();
       const validExtensions = ['jpg', 'jpeg', 'png', 'webp'];
       if (!validExtensions.includes(extension)) {
-        clearSelectedFile();
         showError('Unsupported File Format', `File extension .${extension} is not supported. Please upload a JPG, PNG, or WebP photo.`);
+        clearSelectedFile();
         return;
       }
 
