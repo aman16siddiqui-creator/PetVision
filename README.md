@@ -36,7 +36,7 @@ petvision/
 ## 🚀 Getting Started on Windows 11
 
 ### 1. Prerequisites
-- **Python 3.10+** installed on Windows 10.
+- **Python 3.10+** installed on Windows 11.
 - Command Prompt (`cmd.exe`) or Windows PowerShell.
 
 ### 2. Create and Activate a Virtual Environment
