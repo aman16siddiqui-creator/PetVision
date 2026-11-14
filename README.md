@@ -44,8 +44,6 @@ petvision/
 Open PowerShell or Command Prompt in the `petvision` directory:
 
 ```powershell
-# Navigate to the project directory
-cd "C:\Users\Aman Siddiqui\.gemini\antigravity\scratch\petvision"
 
 # Create a virtual environment named 'venv'
 python -m venv venv
